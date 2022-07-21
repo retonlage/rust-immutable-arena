@@ -67,6 +67,11 @@ impl<T> Arena<T> {
     {
         self.arena.alloc(t)
     }
+
+    /// Access inner arena destructively
+    pub fn into_vec(self) -> Vec<T> {
+        self.arena.into_vec()
+    }
 }
 
 /// A `Ref<'arena, T>` is a smart pointer type that may be used within an
@@ -197,5 +202,16 @@ mod test {
         });
 
         assert!(y.a.id == 0);
+    }
+
+    #[test]
+    fn into_vec_test() {
+        let arena = Arena::new();
+        arena.alloc(1);
+        arena.alloc(2);
+
+        let vec = arena.into_vec();
+        assert_eq!(vec[0], 1);
+        assert_eq!(vec[1], 2);
     }
 }
